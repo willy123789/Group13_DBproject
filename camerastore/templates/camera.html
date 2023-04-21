@@ -1,0 +1,48 @@
+{% extends "frontstage.html" %}
+{% block head %}
+{{ super() }}
+{% endblock head %}
+
+{% block title %}camerastore{% endblock title%}
+
+{% block content %}
+
+{% set temp = 'img/' + camera.相機圖片 %}
+
+<br/>
+<div class="row">
+<div class="card" style="width: 20rem;margin-left:5%">
+  <img src={{ url_for('static', filename = temp  ) }} class="card-img-top">
+  <div class="card-body">
+    <h5 class="card-title">{{ camera.相機名稱 }}</h5>
+    <p class="card-text"></p>
+  </div>
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item"><b>相機品牌</b>&nbsp;&nbsp;{{ camera.相機品牌 }}</li>
+    <li class="list-group-item"><b>相機價格</b>&nbsp;&nbsp;{{ camera.相機價格 }}</li>
+  </ul>
+  <div class="card-body">
+    <a href="{{ url_for('camerastore.camerastore') }}" class="btn btn-outline-primary">回相機列表</a>
+  </div>
+</div>
+
+
+<div class="col-sm-6">
+  <form method="post" action={{ url_for('camerastore.cart') }}>
+<div class="card" style="margin-top:10%">
+  <h5 class="card-header">相機介紹</h5>
+  <div class="card-body">
+    <p class="card-text">
+      {{camera.相機畫素}}
+    </p>
+    <button class="btn btn-outline-success" type="submit" value="{{camera.相機編號}}" name="cmid">加入購物車</a>
+  </div>
+</div>
+</form>
+</div>
+
+
+</div>
+
+
+{% endblock content%}

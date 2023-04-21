@@ -1,0 +1,3 @@
+<a class="page-link" href="{{ url_for('camerastore.camerastore', page=page-1) }}" aria-label="Previous">
+
+沒有定義page

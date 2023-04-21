@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block head %}
+{{ super() }}
+{% endblock head %}
+
+{% block title %}小小相機網路商城{% endblock title%}
+
+{% block content%}
+<div class="position-absolute top-50 start-50 translate-middle">
+    <!-- C:\Users\user\Documents\DB_Project\static\img\DB page icon.png -->
+    <img class="=index_img" src="{{ url_for('static', filename='./img/DB page icon.png') }}">
+    <h1 class="index_title">小小相機網路商城</h1>
+    <div class="btn_div">
+        
+        <a href="{{ url_for('api.login') }}">
+            <button class="index_btn">會員登入</button>
+        <a href="{{ url_for('api.register') }}">
+            <button class="index_btn">註冊會員</button>
+    </div>
+</div>
+{% endblock content%}
