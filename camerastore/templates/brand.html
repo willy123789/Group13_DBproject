@@ -1,0 +1,44 @@
+{% extends "frontstage.html" %}
+{% block head %}
+{{ super() }}
+{% endblock head %}
+
+{% block title %}brandstore{% endblock title%}
+
+{% block content %}
+
+{% set temp = 'img/' + brand.品牌圖片 %}
+
+
+<br/>
+<div class="row">
+<div class="card" style="width: 25rem;margin-left:5%">
+  <img src={{ url_for('static', filename = temp  ) }} class="card-img-top">
+  <div class="card-body">
+    <h5 class="card-title">{{ brand.品牌名稱 }}</h5>
+
+    <p class="card-text"></p>
+  </div>
+  <ul class="list-group list-group-flush">
+
+    <li class="list-group-item"><b>品牌網址 </b><a href ="{{ brand.品牌網址 }}">{{ brand.品牌網址 }}</a> </li>
+  </ul>
+  <div class="card-body">
+    <a href="{{ url_for('camerastore.brand_page') }}" class="btn btn-outline-primary">回品牌列表</a>
+  </div>
+</div>
+
+
+
+<div class="card" style="width: 50rem;margin-left:5%">
+  <div class="card-body">
+    <h5 class="card-title">品牌描述</h5>
+  </div>
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item"><b>品牌描述</b>&nbsp;&nbsp;{{ brand.品牌描述 }}</li>
+  </ul>
+</div>
+</div>
+
+
+{% endblock content%}

@@ -166,8 +166,8 @@ def orderManager():
         for j in orderdetail_row:
             orderdetail = {
                 '訂單編號': j[0],
-                '商品名稱': j[1],
-                '商品單價': j[2],
+                '相機名稱': j[1],
+                '相機單價': j[2],
                 '訂購數量': j[3]
             }
             order_detail.append(orderdetail)

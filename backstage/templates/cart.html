@@ -1,0 +1,65 @@
+{% extends "frontstage.html" %}
+{% block head %}
+{{ super() }}
+{% endblock head %}
+
+{% block title %}購物車清單{% endblock title%}
+
+{% block content %}
+
+{% with messages = get_flashed_messages() %}
+{% if messages[0] == 'No permission' %}
+  
+<script language="javascript">
+  alert('您沒有使用者的權限喔！');
+</script>
+
+{% endif %}
+{% endwith %}
+
+<br/>
+<div class="container-xl">
+  <br/>
+  <form method="post" action={{ url_for('camerastore.cart') }}>
+    <table class="table table-bordered">
+      <tr>
+        <th><center>相機編號</center></th>
+        <th><center>相機名稱</center></th>
+        <th><center>相機價格</center></th>
+        <th><center>數量</center></th>
+        <th><center>相機操作</center></th>
+      </tr>
+      {% for camera in data %}
+      <tr>
+        <td> <center>{{ camera.相機編號 }}</center></td>
+        <td> <center>{{ camera.相機名稱 }}</center></td>
+        <td> <center>{{ camera.相機價格 }}</center></td>
+        <td width="20%">
+          <center>
+            <input class="form-control" type="number" onkeyup="value=value.replace(/[^\d]/g,'')" min="1" value="{{ camera.數量 }}" name="{{ camera.商品編號 }}">
+
+          </center>
+        </td>
+        <td>
+          <center>
+            <button class="btn btn-danger" type="submit" value="{{camera.商品編號}}" name="delete" onclick="return (confirm('你確定要刪除 \'{{ camera.商品名稱 }}\' 嗎？'))">
+              刪除
+            </button>
+          </center>
+      </td>
+      </tr>
+      {% endfor %}
+    </table>
+    <center>
+      <div class="option">
+        <button class="btn btn-primary" type="submit" value="edit" name="user_edit" >繼續購物</button>
+        <button class="btn btn-success" type="submit" value="edit" name="buy" >直接結帳</button>
+      </div>
+    </center>
+
+
+  </form>
+
+</div>
+
+{% endblock content%}

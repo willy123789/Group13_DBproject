@@ -21,7 +21,7 @@ app.secret_key = 'Your Key'
 app.register_blueprint(api, url_prefix='/')
 # app.register_blueprint(store, url_prefix='/camerastore')
 app.register_blueprint(store, url_prefix='/camerastore')
-# app.register_blueprint(analysis, url_prefix='/backstage')
+app.register_blueprint(analysis, url_prefix='/backstage')
 app.register_blueprint(manager_c, url_prefix='/backstage')
 app.register_blueprint(manager_l, url_prefix='/backstage')
 

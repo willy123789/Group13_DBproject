@@ -33,17 +33,8 @@ final_data = []
 print(camera_row)    
 print("######################")
 
-for i in camera_row:
-    camera = {
-        '相機編號': i[0],
-        '相機型號': i[1],
-        '相機名稱': i[2],
-        '相機畫素': i[3],
-        '相機品牌': i[4],
-        '相機價格': i[5],
-    }
-    camera_data.append(camera)
-
-# print(camera_data)
-for i in camera_data:
-    print(i)
+data = Brand.get_brand('Canon')
+# data = Brand.get_addr('Canon')
+# data = Brand.get_desc('Canon')
+# data = Brand.get_all_brand()
+print(data)

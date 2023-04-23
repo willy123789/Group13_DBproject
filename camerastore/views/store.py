@@ -14,7 +14,7 @@ from link import *
 import math
 from base64 import b64encode
 from api.api import *
-from api.sql import Member,Cart, Camera
+from api.sql import Member,Cart, Camera, Record
 
 store = Blueprint('camerastore', __name__, template_folder='../templates')
 
@@ -43,7 +43,7 @@ def camerastore():
         keyword = search
         
         cursor = DB.connect()
-        cursor.prepare('SELECT * FROM CAMERA WHERE PNAME LIKE :search')
+        cursor.prepare('SELECT * FROM CAMERA WHERE CMNAME LIKE :search')
         cursor.execute(None, {'search': '%' + keyword + '%'})
         camera_row = cursor.fetchall()
         camera_data = []
@@ -167,6 +167,162 @@ def camerastore():
         
         return render_template('camerastore.html', camera_data=camera_data, user=current_user.name, page=1, flag=flag, count=count)
 
+#lens_start
+@store.route('/lensstore', methods=['GET', 'POST'])
+@login_required
+def lensstore():
+    result = Lens.count()
+    count = math.ceil(result[0]/9)
+    flag = 0
+    
+    
+
+    if request.method == 'GET':
+        if(current_user.role == 'manager'):
+            flash('No permission')
+            return redirect(url_for('manager_c.home'))
+
+    if 'keyword' in request.args and 'page' in request.args:
+        total = 0
+        single = 1
+        page = int(request.args['page'])
+        start = (page - 1) * 9
+        end = page * 9
+        search = request.values.get('keyword')
+        keyword = search
+        
+        cursor = DB.connect()
+        cursor.prepare('SELECT * FROM LENS WHERE LNAME LIKE :search')
+        cursor.execute(None, {'search': '%' + keyword + '%'})
+        lens_row = cursor.fetchall()
+        lens_data = []
+        final_data = []
+        
+        for i in lens_row:
+            lens = {
+                '鏡頭編號': i[0],
+                '鏡頭名稱': i[1],
+                '鏡頭價格': i[5]
+            }
+            lens_data.append(lens)
+            total = total + 1
+        
+        if(len(lens_data) < end):
+            end = len(lens_data)
+            flag = 1
+            
+        for j in range(start, end):
+            final_data.append(lens_data[j])
+            
+        count = math.ceil(total/9)
+        
+        return render_template('lensstore.html', single=single, keyword=search, lens_data=lens_data, user=current_user.name, page=1, flag=flag, count=count)    
+    # return render_template('lensstore.html')
+    
+    elif 'lid' in request.args:
+        lid = request.args['lid']
+        data = Lens.get_lens(lid)
+        
+        brand = data[2]
+        name = data[1]
+        aperture = data[3]
+        focal_lenth = data[4]
+        model = data[6]
+        price = data[5]
+        image = model+'.png'
+        
+        lens = {
+        '鏡頭編號': lid,
+        '鏡頭型號': model,
+        '鏡頭品牌': brand,
+        '鏡頭名稱': name,
+        '鏡頭光圈': aperture,
+        '鏡頭焦段': focal_lenth,
+        '鏡頭價格': price,
+        '鏡頭圖片': image,
+        }
+
+        return render_template('lens.html', lens = lens, user=current_user.name)
+    
+    elif 'page' in request.args:
+        page = int(request.args['page'])
+        start = (page - 1) * 9
+        end = page * 9
+        
+        lens_row = Lens.get_all_lens()
+        lens_data = []
+        final_data = []
+            
+        for i in lens_row:
+            lens = {
+                '鏡頭編號': i[0],
+                '鏡頭型號': i[6],
+                '鏡頭品牌': i[2],
+                '鏡頭名稱': i[1],
+                '鏡頭光圈': i[3],
+                '鏡頭焦段': i[4],
+                '鏡頭價格': i[5],
+            }
+            lens_data.append(lens)
+            
+        if(len(lens_data) < end):
+            end = len(lens_data)
+            flag = 1
+            
+        for j in range(start, end):
+            final_data.append(lens_data[j])
+        
+        return render_template('lensstore.html', lens_data=final_data, user=current_user.name, page=page, flag=flag, count=count)    
+    
+    elif 'keyword' in request.args:
+        single = 1
+        search = request.values.get('keyword')
+        keyword = search
+        cursor = DB.connect()
+        cursor.prepare('SELECT * FROM lens WHERE LNAME LIKE :search')
+        cursor.execute(None, {'search': '%' + keyword + '%'})
+        lens_row = cursor.fetchall()
+        lens_data = []
+        total = 0
+        
+        for i in lens_row:
+            lens = {
+                '鏡頭編號': i[0],
+                '鏡頭名稱': i[1],
+                '鏡頭品牌': i[2],
+                '鏡頭價格': i[5]
+            }
+
+            lens_data.append(lens)
+            total = total + 1
+            
+        if(len(lens_data) < 9):
+            flag = 1
+        
+        count = math.ceil(total/9)    
+        
+        return render_template('lensstore.html', keyword=search, single=single, lens_data=lens_data, user=current_user.name, page=1, flag=flag, count=count)    
+    
+    else:
+        lens_row = Lens.get_all_lens()
+        lens_data = []
+        temp = 0
+        for i in lens_row:
+            lens = {
+                '鏡頭編號': i[0],
+                '鏡頭名稱': i[1],
+                '鏡頭品牌': i[2],
+                '鏡頭價格': i[5]
+            }
+            if len(lens_data) < 9:
+                lens_data.append(lens)
+        
+        return render_template('lensstore.html', lens_data=lens_data, user=current_user.name, page=1, flag=flag, count=count)
+
+
+
+
+
 # 會員購物車
 @store.route('/cart', methods=['GET', 'POST'])
 @login_required # 使用者登入後才可以看
@@ -194,11 +350,11 @@ def cart():
             # 檢查購物車裡面有沒有商品
             camera = Record.check_camera(cmid, tno)
             # 取得商品價錢
-            price = Camera.get_camera(cmid)[2]
+            price = Camera.get_camera(cmid)[5]
 
             # 如果購物車裡面沒有的話 把他加一個進去
             if(camera == None):
-                Record.add_camera( {'id': tno, 'tno':cmid, 'price':price, 'total':price} )
+                Record.add_camera( {'id': cmid, 'tno':tno, 'price':price, 'total':price} )
             else:
                 # 假如購物車裡面有的話，就多加一個進去
                 amount = Record.get_amount(tno, cmid)
@@ -237,5 +393,98 @@ def cart():
         return render_template('empty.html', user=current_user.name)
     else:
         return render_template('cart.html', data=camera_data, user=current_user.name)
+    
+@store.route('/order')
+def order():
+    data = Cart.get_cart(current_user.id)
+    tno = data[2]
+
+    camera_row = Record.get_record(tno)
+    camera_data = []
+
+    for i in camera_row:
+        cmname = Camera.get_name(i[1])
+        camera = {
+            '相機編號': i[1],
+            '相機名稱': cmname,
+            '相機價格': i[3],
+            '數量': i[2]
+        }
+        camera_data.append(camera)
+    
+    total = Record.get_total(tno)[0]
+
+    return render_template('order.html', data=camera_data, total=total, user=current_user.name)
+
+def change_order():
+    data = Cart.get_cart(current_user.id)
+    tno = data[2] # 使用者有購物車了，購物車的交易編號是什麼
+    camera_row = Record.get_record(data[2])
+
+    for i in camera_row:
+        
+        # i[0]：交易編號 / i[1]：商品編號 / i[2]：數量 / i[3]：價格
+        if int(request.form[i[1]]) != i[2]:
+            Record.update_camera({
+                'amount':request.form[i[1]],
+                'cmid':i[1],
+                'tno':tno,
+                'total':int(request.form[i[1]])*int(i[3])
+            })
+            print('change')
+
+    return 0
+
+def only_cart():
+    
+    count = Cart.check(current_user.id)
+
+    if(count == None):
+        return 0
+    
+    data = Cart.get_cart(current_user.id)
+    tno = data[2]
+    camera_row = Record.get_record(tno)
+    camera_data = []
+
+    for i in camera_row:
+        cmid = i[1]
+        name = Camera.get_name(i[1])
+        price = i[3]
+        amount = i[2]
+        
+        camera = {
+            '相機編號': cmid,
+            '相機名稱': name,
+            '相機價格': price,
+            '數量': amount
+        }
+        camera_data.append(camera)
+    
+    return camera_data
 
 
+# brand
+@store.route('/brand_page', methods=['GET', 'POST'])
+@login_required
+def brand_page():
+    if 'bname' in request.args:
+        bname = request.args['bname']
+        data = Brand.get_brand(bname)
+        
+        name = data[0]
+        desc = data[1]
+        addr = data[2]
+        image = name+'.png'
+        
+        brand = {
+        '品牌名稱': name,
+        '品牌描述': desc,
+        '品牌網址': addr,
+        '品牌圖片': image,
+        }
+
+        return render_template('brand.html', brand = brand, user=current_user.name)
+    
+    else:
+        return render_template('camerastore.html')

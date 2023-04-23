@@ -1,0 +1,49 @@
+{% extends "frontstage.html" %}
+{% block head %}
+{{ super() }}
+{% endblock head %}
+
+{% block title %}camerastore{% endblock title%}
+
+{% block content %}
+{% set temp = 'img/' + lens.鏡頭圖片 %}
+
+<br/>
+<div class="row">
+<div class="card" style="width: 20rem;margin-left:5%">
+  <img src={{ url_for('static', filename = temp  ) }} class="card-img-top">
+  <div class="card-body">
+    <h5 class="card-title">{{ lens.鏡頭名稱 }}</h5>
+    <p class="card-text"></p>
+  </div>
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item"><b>鏡頭品牌</b>&nbsp;&nbsp;{{ lens.鏡頭品牌 }}</li>
+    <li class="list-group-item"><b>鏡頭價格</b>&nbsp;&nbsp;{{ lens.鏡頭價格 }}</li>
+  </ul>
+  <div class="card-body">
+    <a href="{{ url_for('camerastore.lensstore') }}" class="btn btn-outline-primary">回鏡頭列表</a>
+  </div>
+</div>
+
+
+<div class="col-sm-6">
+  <form method="post" action={{ url_for('camerastore.cart') }}>
+<div class="card" style="margin-top:10%">
+  <h5 class="card-header">鏡頭介紹</h5>
+  <div class="card-body">
+    <p class="card-text">
+      光圈:F{{lens.鏡頭光圈}}
+    </p>
+      焦段:{{lens.鏡頭焦段}}mm
+    </p>
+    <button class="btn btn-outline-success" type="submit" value="{{lens.鏡頭編號}}" name="lid">加入購物車</a>
+  </div>
+</div>
+</form>
+</div>
+
+
+</div>
+
+
+{% endblock content%}
