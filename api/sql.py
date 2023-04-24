@@ -89,6 +89,10 @@ class Camera():
         sql = 'SELECT * FROM CAMERA WHERE CMID = :cmid'
         return DB.fetchone(DB.execute_input(DB.prepare(sql), {'cmid': cmid}))
     
+    def get_camera_bybrand(brand):
+        sql = 'SELECT * FROM CAMERA WHERE CMBRAND = :brand'
+        return DB.fetchall(DB.execute_input(DB.prepare(sql), {'brand': brand}))
+    
     def get_all_camera():
         sql = 'SELECT * FROM CAMERA'
         return DB.fetchall(DB.execute(DB.connect(), sql))
@@ -155,6 +159,10 @@ class Lens():
 class Brand():
     def get_all_brand():
         sql = 'SELECT * FROM BRAND'
+        return DB.fetchall(DB.execute(DB.connect(), sql))
+    
+    def get_all_brand_name():
+        sql = 'SELECT BNAME FROM BRAND'
         return DB.fetchall(DB.execute(DB.connect(), sql))
     
     def get_brand(bname):

@@ -27,14 +27,5 @@ def user_loader(userid):
 
 # print(user_loader(63))
 print("######################")
-camera_row = Camera.get_all_camera()
-camera_data = []
-final_data = []
-print(camera_row)    
-print("######################")
-
-data = Brand.get_brand('Canon')
-# data = Brand.get_addr('Canon')
-# data = Brand.get_desc('Canon')
-# data = Brand.get_all_brand()
-print(data)
+camera_row = Camera.get_camera_bybrand('Leica')
+print(camera_row)

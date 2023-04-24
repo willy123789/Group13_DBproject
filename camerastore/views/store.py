@@ -53,7 +53,8 @@ def camerastore():
             camera = {
                 '相機編號': i[0],
                 '相機名稱': i[2],
-                '相機價格': i[5]
+                '相機價格': i[5],
+                '相機圖片': i[1]+'.png',
             }
             camera_data.append(camera)
             total = total + 1
@@ -93,6 +94,63 @@ def camerastore():
 
         return render_template('camera.html', camera = camera, user=current_user.name)
     
+    elif 'brand' in request.args:
+        single = 1
+        brand = request.args['brand']
+        camera_row = Camera.get_camera_bybrand(brand)
+        camera_data = []
+        total = 0
+        for i in camera_row:
+            camera = {
+                '相機編號': i[0],
+                '相機名稱': i[2],
+                '相機品牌': i[4],
+                '相機價格': i[5],
+                '相機圖片': i[1]+'.png',
+            }
+            camera_data.append(camera)
+            total = total + 1
+            
+        if(len(camera_data) < 9):
+            flag = 1
+        
+        count = math.ceil(total/9) 
+
+        return render_template('camerastore.html',single = single ,camera_data=camera_data, user=current_user.name, page=1, flag=flag, count=count)
+
+
+    elif 'brand' in request.args and 'page' in request.args:
+        total = 0
+        single = 1
+        page = int(request.args['page'])
+        start = (page - 1) * 9
+        end = page * 9
+
+        brand = request.args['brand']
+        camera_row = Camera.get_camera_bybrand(brand)
+        camera_data = []
+        for i in camera_row:
+            camera = {
+                '相機編號': i[0],
+                '相機名稱': i[2],
+                '相機品牌': i[4],
+                '相機價格': i[5],
+                '相機圖片': i[1]+'.png',
+            }
+            camera_data.append(camera)
+            total = total + 1
+
+        if(len(camera_data) < end):
+            end = len(camera_data)
+            flag = 1
+            
+        for j in range(start, end):
+            final_data.append(camera_data[j])
+            
+        count = math.ceil(total/9)
+            
+        return render_template('camerastore.html',single = single ,camera_data=camera_data, user=current_user.name, page=1, flag=flag, count=count)
+
     elif 'page' in request.args:
         page = int(request.args['page'])
         start = (page - 1) * 9
@@ -110,6 +168,7 @@ def camerastore():
                 '相機畫素': i[3],
                 '相機品牌': i[4],
                 '相機價格': i[5],
+                '相機圖片': i[1]+'.png',
             }
             camera_data.append(camera)
             
@@ -138,7 +197,8 @@ def camerastore():
                 '相機編號': i[0],
                 '相機名稱': i[2],
                 '相機品牌': i[4],
-                '相機價格': i[5]
+                '相機價格': i[5],
+                '相機圖片': i[1]+'.png',
             }
 
             camera_data.append(camera)
@@ -153,19 +213,28 @@ def camerastore():
     
     else:
         camera_row = Camera.get_all_camera()
+        brand_row = Brand.get_all_brand()
         camera_data = []
+        brand_data = []
         temp = 0
         for i in camera_row:
             camera = {
                 '相機編號': i[0],
                 '相機名稱': i[2],
                 '相機品牌': i[4],
-                '相機價格': i[5]
+                '相機價格': i[5],
+                '相機圖片': i[1]+'.png',
             }
             if len(camera_data) < 9:
                 camera_data.append(camera)
+
+        for i in brand_row:
+            brand = {
+                '品牌名稱': i[0],
+            }
+            brand_data.append(brand)
         
-        return render_template('camerastore.html', camera_data=camera_data, user=current_user.name, page=1, flag=flag, count=count)
+        return render_template('camerastore.html', camera_data=camera_data,brand_data=brand_data, user=current_user.name, page=1, flag=flag, count=count)
 
 #lens_start
 @store.route('/lensstore', methods=['GET', 'POST'])
@@ -202,7 +271,8 @@ def lensstore():
             lens = {
                 '鏡頭編號': i[0],
                 '鏡頭名稱': i[1],
-                '鏡頭價格': i[5]
+                '鏡頭價格': i[5],
+                '鏡頭圖片': i[6]+'.png',
             }
             lens_data.append(lens)
             total = total + 1
@@ -262,6 +332,7 @@ def lensstore():
                 '鏡頭光圈': i[3],
                 '鏡頭焦段': i[4],
                 '鏡頭價格': i[5],
+                '鏡頭圖片': i[6]+'.png',
             }
             lens_data.append(lens)
             
@@ -290,7 +361,8 @@ def lensstore():
                 '鏡頭編號': i[0],
                 '鏡頭名稱': i[1],
                 '鏡頭品牌': i[2],
-                '鏡頭價格': i[5]
+                '鏡頭價格': i[5],
+                '鏡頭圖片': i[6]+'.png',
             }
 
             lens_data.append(lens)
@@ -312,7 +384,8 @@ def lensstore():
                 '鏡頭編號': i[0],
                 '鏡頭名稱': i[1],
                 '鏡頭品牌': i[2],
-                '鏡頭價格': i[5]
+                '鏡頭價格': i[5],
+                '鏡頭圖片': i[6]+'.png',
             }
             if len(lens_data) < 9:
                 lens_data.append(lens)
@@ -347,6 +420,7 @@ def cart():
                 
             tno = data[2] # 取得交易編號
             cmid = request.values.get('cmid') # 使用者想要購買的東西
+            lid = request.values.get('lid') # 使用者想要購買的東西
             # 檢查購物車裡面有沒有商品
             camera = Record.check_camera(cmid, tno)
             # 取得商品價錢

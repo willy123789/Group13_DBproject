@@ -36,6 +36,8 @@
       
       
       {% for lens in lens_data %}
+      {% set temp = 'img/' + lens.鏡頭圖片 %}
+
       {% if loop.index % 3 == 1 %}
       <div class="row">
       {% endif %}
@@ -44,8 +46,11 @@
           <div class="card">
             <div class="card-body">
               <h5 class="card-title">{{lens.鏡頭名稱}}</h5>
-              <p class="card-text">{{lens.鏡頭品牌}}</p>
+              <!-- <p class="card-text">{{lens.鏡頭品牌}}</p> -->
+              <a href="{{url_for('camerastore.brand_page', bname=lens.鏡頭品牌 )}}" >{{lens.鏡頭品牌}}</a>
               <p class="card-text">${{lens.鏡頭價格}}</p>
+              <img src={{ url_for('static', filename =temp) }} class="card-img-top">
+
               
               
               <a href="{{ url_for('camerastore.lensstore', lid=lens.鏡頭編號) }}" class="btn btn-outline-primary">查看鏡頭資訊</a>
