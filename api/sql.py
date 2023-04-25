@@ -93,6 +93,21 @@ class Camera():
         sql = 'SELECT * FROM CAMERA WHERE CMBRAND = :brand'
         return DB.fetchall(DB.execute_input(DB.prepare(sql), {'brand': brand}))
     
+    def get_cmaera_sort(method):
+        if method == 'price_asce':
+            sql = 'SELECT * FROM CAMERA ORDER BY CAST(CPRICE as NUMBER) asc'
+            return DB.fetchall(DB.execute(DB.connect(), sql))
+        elif method == 'price_desc':
+            sql = 'SELECT * FROM CAMERA ORDER BY CAST(CPRICE as NUMBER) desc'
+            return DB.fetchall(DB.execute(DB.connect(), sql))
+        elif method == 'pixel_asce':
+            sql = 'SELECT * FROM CAMERA ORDER BY CAST(PIXEL as NUMBER) asc'
+            return DB.fetchall(DB.execute(DB.connect(), sql))
+        elif method == 'pixel_desc':
+            sql = 'SELECT * FROM CAMERA ORDER BY CAST(PIXEL as NUMBER) desc'
+            return DB.fetchall(DB.execute(DB.connect(), sql))
+
+    
     def get_all_camera():
         sql = 'SELECT * FROM CAMERA'
         return DB.fetchall(DB.execute(DB.connect(), sql))

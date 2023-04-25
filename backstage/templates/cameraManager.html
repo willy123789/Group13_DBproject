@@ -53,7 +53,7 @@
         </span>
         <input class="form-control me-2" id="keyword" placeholder="搜尋商品" aria-label="Search">
     </div>
-    <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+    <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#staticBackdrop"  >
         新增相機
     </button>
 </div>
@@ -64,7 +64,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="staticBackdropLabel">新增相機</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" ></button>
                 </div>
                 <div class="modal-body">
                     <div class="mb-3">
@@ -124,9 +124,9 @@
             <th width="10%"><center>相機編號</center></th>
             <th width="20%"><center>相機型號</center></th>
             <th width="15%"><center>相機名稱</center></th>
-            <th width="15%"><center>相機畫素</center></th>
+            <th width="10%"><center>相機畫素</center></th>
             <th width="15%"><center>相機品牌</center></th>
-            <th width="15%"><center>相機價格</center></th>
+            <th width="10%"><center>相機價格</center></th>
             <th colspan="2"><center>資料操作</center></th>
         </tr>
     </thead>
@@ -139,8 +139,8 @@
             <td><center>{{ i.相機畫素 }}</center></td>
             <td><center>{{ i.相機品牌 }}</center></td>
             <td><center>{{ i.相機價格 }}</center></td>
-            <td><center><button type="submit" value="{{i.相機編號}}" name="edit" class="btn btn-success">編輯商品</button></center></td>
-            <td><center><button type="submit" value="{{i.相機編號}}" name="delete" onclick="return (confirm('你確定要刪除 \'{{ i.商品名稱 }}\' 嗎？'))" class="btn btn-danger">刪除商品</button></center></td>
+            <td width="10%"><center><button type="submit" value="{{i.相機編號}}" name="edit" class="btn btn-success" style="background-color: #164773;">編輯商品</button></center></td>
+            <td width="10%"><center><button type="submit" value="{{i.相機編號}}" name="delete" onclick="return (confirm('你確定要刪除 \'{{ i.商品名稱 }}\' 嗎？'))" class="btn btn-danger" style="background-color: #bd2a2e;">刪除商品</button></center></td>
         </tr>
     {% endfor %}
     </tbody>

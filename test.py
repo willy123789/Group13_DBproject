@@ -27,5 +27,5 @@ def user_loader(userid):
 
 # print(user_loader(63))
 print("######################")
-camera_row = Camera.get_camera_bybrand('Leica')
-print(camera_row)
+row = Camera.get_cmaera_sort('price_asce')
+print(row)

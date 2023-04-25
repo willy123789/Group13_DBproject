@@ -1,15 +1,43 @@
 {% extends "base.html" %}
 {% block head %}
 {{ super() }}
+<style>
+    img {
+        align-self: center;
+
+    }
+    .icon {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        top: 400px;
+    }.main{
+        position: relative;
+        display: block;
+        justify-content: center;
+        top: 400px;
+        translate: middle;
+    }
+    
+
+
+
+    /* position-absolute top-50 start-50 translate-middle */
+</style>
+
 {% endblock head %}
 
 {% block title %}小小相機網路商城{% endblock title%}
 
 {% block content%}
-<div class="position-absolute top-50 start-50 translate-middle">
+<div class="icon">
+    <img class="index_img" src="{{ url_for('static', filename='./img/DBicon_op60-1.png') }}">
+</div>
+<div class="main">
+    <div class="index">
+        <h1 class="index_title">小小相機網路商城</h1>
+    </div>
     <!-- C:\Users\user\Documents\DB_Project\static\img\DB page icon.png -->
-    <img class="=index_img" src="{{ url_for('static', filename='./img/DB page icon.png') }}">
-    <h1 class="index_title">小小相機網路商城</h1>
     <div class="btn_div">
         
         <a href="{{ url_for('api.login') }}">

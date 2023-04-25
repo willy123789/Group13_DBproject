@@ -71,6 +71,37 @@ def camerastore():
         return render_template('camerastore.html', single=single, keyword=search, camera_data=camera_data, user=current_user.name, page=1, flag=flag, count=count)    
     # return render_template('camerastore.html')
     
+    elif 'sort' in request.args:
+        single = 1
+        sort = request.values.get('sort')
+
+        method = sort
+        camera_row = Camera.get_cmaera_sort(method)
+        camera_data = []
+        total = 0
+        
+        for i in camera_row:
+            camera = {
+                '相機編號': i[0],
+                '相機名稱': i[2],
+                '相機品牌': i[4],
+                '相機價格': i[5],
+                '相機圖片': i[1]+'.png',
+            }
+
+            camera_data.append(camera)
+            total = total + 1
+            
+        if(len(camera_data) < 9):
+            flag = 1
+        
+        count = math.ceil(total/9)    
+        
+        return render_template('camerastore.html', method=sort, single=single, camera_data=camera_data, user=current_user.name, page=1, flag=flag, count=count)    
+
+
+
+
     elif 'cmid' in request.args:
         cmid = request.args['cmid']
         data = Camera.get_camera(cmid)
@@ -419,8 +450,8 @@ def cart():
                 data = Cart.get_cart(current_user.id) 
                 
             tno = data[2] # 取得交易編號
-            cmid = request.values.get('cmid') # 使用者想要購買的東西
-            lid = request.values.get('lid') # 使用者想要購買的東西
+            cmid = request.values.get('cmid') # 使用者想要購買的相機
+            lid = request.values.get('lid') # 使用者想要購買的鏡頭
             # 檢查購物車裡面有沒有商品
             camera = Record.check_camera(cmid, tno)
             # 取得商品價錢
