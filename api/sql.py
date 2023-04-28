@@ -148,6 +148,10 @@ class Lens():
         sql = 'SELECT * FROM LENS'
         return DB.fetchall(DB.execute(DB.connect(), sql))
     
+    def get_lens_bybrand(brand):
+        sql = 'SELECT * FROM LENS WHERE LBRAND = :brand'
+        return DB.fetchall(DB.execute_input(DB.prepare(sql), {'brand': brand}))
+    
     def get_model(lid):
         sql = 'SELECT LMODEL FROM LENS WHERE LID = :lid'
         return DB.fetchone(DB.execute_input(DB.prepare(sql), {'lid': lid}))[0]

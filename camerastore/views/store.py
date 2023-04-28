@@ -445,6 +445,65 @@ def lensstore():
         
         return render_template('lensstore.html', keyword=search, single=single, lens_data=lens_data, user=current_user.name, page=1, flag=flag, count=count)    
     
+    elif 'brand' in request.args:
+        single = 2
+        brand = request.args['brand']
+        lens_row = Lens.get_lens_bybrand(brand)
+        lens_data = []
+        total = 0
+        for i in lens_row:
+            lens = {
+                '鏡頭編號': i[0],
+                '鏡頭名稱': i[1],
+                '鏡頭品牌': i[2],
+                '鏡頭價格': i[5],
+                '鏡頭圖片': i[6]+'.png',
+            }
+            lens_data.append(lens)
+            total = total + 1
+            
+        if(len(lens_data) < 9):
+            flag = 1
+        
+        count = math.ceil(total/9) 
+
+        return render_template('lensstore.html',single = single ,lens_data=lens_data, user=current_user.name, page=1, flag=flag, count=count)
+
+
+    elif 'brand' in request.args and 'page' in request.args:
+        total = 0
+        single = 2
+        page = int(request.args['page'])
+        start = (page - 1) * 9
+        end = page * 9
+
+        brand = request.args['brand']
+        lens_row = Lens.get_lens_bybrand(brand)
+        lens_data = []
+        for i in lens_row:
+            lens = {
+                '鏡頭編號': i[0],
+                '鏡頭名稱': i[1],
+                '鏡頭品牌': i[2],
+                '鏡頭價格': i[5],
+                '鏡頭圖片': i[6]+'.png',
+            }
+            lens_data.append(lens)
+            total = total + 1
+
+        if(len(lens_data) < end):
+            end = len(lens_data)
+            flag = 1
+            
+        for j in range(start, end):
+            final_data.append(lens_data[j])
+            
+        count = math.ceil(total/9)
+            
+        return render_template('lensstore.html',single = single ,lens_data=lens_data, user=current_user.name, page=1, flag=flag, count=count)
+
+        
+
     else:
         lens_row = Lens.get_all_lens()
         lens_data = []

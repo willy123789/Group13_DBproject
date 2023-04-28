@@ -56,9 +56,6 @@
     background-color: #444;
   }
 
-  .select {
-
-  }
 
 
   #main {
@@ -82,6 +79,7 @@
 <br/>
 <div id="mySidebar" class="sidebar">
   <a href="javascripts:void(0)" class="closebtn" onclick="closeNav()">x</a>
+  <!-- <button class="btn btn-outline-success" type="send" value="Fujifilm" name="brand" >Fujifilm</button> -->
   <a href="{{ url_for('camerastore.camerastore', brand='Fujifilm', page=1) }}" >Fujifilm</a>
   <a href="{{ url_for('camerastore.camerastore', brand='Canon') }}" >Canon</a>
   <a href="{{ url_for('camerastore.camerastore', brand='Leica') }}" >Leica</a>
@@ -138,7 +136,7 @@ function closeNav() {
       <option value="pixel_asce">畫素由低到高</option>  
       <option value="pixel_desc">畫素由高到低</option>  
     </select>
-    <button>送出</button>
+    <button>確定</button>
   </div>
 </form>
 <br>
@@ -203,6 +201,7 @@ function closeNav() {
       <li class="page-item"><a class="page-link" href="{{ url_for('camerastore.camerastore', page=i) }}">{{i}}</a></li>
       {% endif %}
       {% endfor %}
+      
       {% if flag == 1 %}
       <li class="page-item disabled">
         <a class="page-link" href="#" aria-label="Next">
